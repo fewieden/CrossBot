@@ -1,0 +1,20 @@
+{
+  "name": "CrossBot",
+  "version": "0.1",
+  "description": "IRC Bot for Twitch.tv",
+  "author": "crossfoxi",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "tmi.js": "0.0.27"
+  },
+  "engines": {
+    "node": "5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fewieden/CrossBot.git"
+  }
+}
