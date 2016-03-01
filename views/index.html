@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CrossBot</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script>
+        var sfx = [
+            'airhorn.mp3',
+            'hax.mp3',
+            'herewego.mp3',
+            'johncena.mp3',
+            'knocking.mp3',
+            'kungfuscream.mp3',
+            'nudel.mp3',
+            'toasty.mp3'
+        ];
+        var isPlaying = false;
+        var socket = io.connect('http://localhost:3000');
+        socket.on('random', function(data){
+            if(!isPlaying){
+                isPlaying = true;
+                var index = parseInt(data);
+                audio.src = 'http://localhost:3000/sfx/' + sfx[index];
+                audio.addEventListener('loadedmetadata', onLoadedMetaData);
+                audio.addEventListener('ended', onEnded);
+                console.log("I got this data: %o", data);
+                random.innerHTML = data;
+            }
+        });
+
+        function onLoadedMetaData(){
+            audio.volume = 0.3;
+            audio.play();
+        }
+
+        function onEnded(){
+            audio.removeEventListener('loadedmetadata', onLoadedMetaData);
+            audio.removeEventListener('ended', onEnded);
+            isPlaying = false;
+        }
+    </script>
+    <style>
+        body {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>CrossBot</h1>
+    <p>CrossBot is an IRC Bot for Twitch.tv</p>
+    <p id="random"></p>
+    <audio id="audio"></audio>
+    <script>
+        var random = document.getElementById('random');
+        var audio = document.getElementById('audio');
+    </script>
+</body>
+</html>

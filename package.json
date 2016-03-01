@@ -1,6 +1,6 @@
 {
   "name": "CrossBot",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "IRC Bot for Twitch.tv",
   "author": "crossfoxi",
   "scripts": {
@@ -8,6 +8,9 @@
   },
   "license": "MIT",
   "dependencies": {
+    "ejs": "2.4.1",
+    "express": "4.13.4",
+    "socket.io": "1.4.5",
     "tmi.js": "0.0.27"
   },
   "engines": {
