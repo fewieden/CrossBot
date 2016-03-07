@@ -11,6 +11,7 @@ bot.init();
 
 socket.on('connection', function(conn){
     bot.setSocket(conn);
+    bot.socket.emit("init-sounds", bot.config.sounds);
     conn.on('disconnect', function(){
         bot.setSocket(null);
     });

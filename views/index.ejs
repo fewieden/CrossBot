@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>CrossBot</title>
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script src="/scripts/main.js"></script>
+        <link rel="stylesheet" href="/stylesheets/main.css">
+    </head>
+    <body>
+        <h1>CrossBot</h1>
+        <p>CrossBot is an IRC Bot for Twitch.tv</p>
+        <div id="sfxHub">
+            <% for(var sound in sounds){ %>
+                <div class="sfx"></div>
+            <% } %>
+        </div>
+        <div id="audioWrapper">
+            <% for(var sound in sounds){ %>
+                <audio src="/sfx/<%= sounds[sound].file %>" volume="<%= sounds[sound].volume || 0.3 %>"></audio>
+            <% } %>
+        </div>
+    </body>
+</html>

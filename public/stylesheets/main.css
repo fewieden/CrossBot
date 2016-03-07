@@ -1,0 +1,27 @@
+body {
+    background-color: green;
+}
+#sfxHub {
+    width: 136px;
+    height: 68px;
+}
+#sfxHub .sfx {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FFFFFF;
+    border-radius: 100%;
+    background-color: #FF4500;
+    margin: 5px;
+    float: left;
+}
+.playing {
+    animation-name: soundbar;
+    animation-duration: 0.4s;
+    animation-iteration-count: infinite;
+}
+@keyframes soundbar {
+    0%   {background-color: #FF4500;}
+    49%  {background-color: #FF4500;}
+    50%  {background-color: #90ee90;}
+    100% {background-color: #90ee90;}
+}

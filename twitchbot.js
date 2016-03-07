@@ -2,22 +2,7 @@
  * Created by fewieden on 29.02.16.
  */
 var config = require('./config.js');
-var options = {
-    options: {
-        debug: true
-    },
-    connection: {
-        cluster: "chat",
-        reconnect: true,
-        secure: true
-    },
-    identity: {
-        username: config.username,
-        password: config.password
-    },
-    channels: ["#"+config.channel]
-};
-var tmi = require('tmi.js').client(options);
+var tmi = require('tmi.js').client(config.options);
 var https = require('https');
 
 var bot = {
@@ -27,6 +12,7 @@ var bot = {
             bot.raffleTimer = null;
             bot.raffleUsers = [];
             bot.followerCount = -1;
+            bot.config = config;
             tmi.on("chat", bot.onChat);
             tmi.on("hosted", bot.onHost);
             setInterval(bot.checkForNewFollower, 15000);
@@ -43,11 +29,11 @@ var bot = {
             bot.chatters.push(user.username);
         }
         if(message.substring(0,1) == "!"){
-            if(message.substring(1,6) == "help"){
-                bot.me(response + "In this channel you can use the command !stack, !uptime and !raffle");
-            } else if(message.substring(1,7) == "stack"){
+            if(message.substring(1,5) == "help"){
+                bot.me(response + "In this channel you can use the command !stack, !uptime, !sfx SOUNDNAME and !raffle");
+            } else if(message.substring(1,6) == "stack"){
                 bot.me(response + "For the Twitch Bot " + config.channel + " is using NodeJS, JS, HTML, CSS, IntelliJ");
-            } else if(message.substring(1,8) == "raffle"){
+            } else if(message.substring(1,7) == "raffle"){
                 if(!bot.raffleTimer){
                     bot.raffleTimer = setTimeout(function(){
                         var winner = Math.floor((Math.random() * bot.raffleUsers.length));
@@ -59,27 +45,32 @@ var bot = {
                     bot.me(response + "@" + (user['display-name'] || user.name) + " started a raffle. Type !raffle to join in the next 30 seconds.");
                 }
                 bot.raffleUsers.push(user.username);
-            } else if(message.substring(1,8) == "uptime"){
-                https.get('https://api.twitch.tv/kraken/streams/' + config.channel, (res) => {
-                    res.on('data', (data) => {
-                        var created_at = new Date(JSON.parse(data).stream.created_at);
-                        var now = new Date().getTime();
-                        var diff = now - created_at;
-                        var seconds = parseInt((diff / 1000) % 60);
-                        var minutes = parseInt((diff / (60000)) % 60);
-                        var hours   = parseInt((diff / (3600000)) % 24);
-                        bot.me(response + config.channel + " is streaming since " +
-                            hours + " hours, " +
-                            minutes + " minutes, " +
-                            seconds + " seconds");
+            } else if(message.substring(1,7) == "uptime"){
+                https.get('https://api.twitch.tv/kraken/streams/' + config.channel, function(res){
+                    res.on('data', function(data){
+                        var stream = JSON.parse(data).stream;
+                        if(stream){
+                            var created_at = new Date(stream.created_at);
+                            var now = new Date().getTime();
+                            var diff = now - created_at;
+                            var seconds = parseInt((diff / 1000) % 60);
+                            var minutes = parseInt((diff / (60000)) % 60);
+                            var hours   = parseInt((diff / (3600000)) % 24);
+                            bot.me(response + config.channel + " is streaming since " +
+                                hours + " hours, " +
+                                minutes + " minutes, " +
+                                seconds + " seconds");
+                        } else {
+                            bot.me(response + config.channel + " is currently offline.")
+                        }
                     });
-                }).on('error', (e) => {
+                }).on('error', function(e){
                     console.error(e);
                 });
-            } else if(message.substring(1,8) == "random") {
+            } else if(message.substring(1,4) == "sfx") {
                 if(bot.socket) {
-                    console.log('trying to send a message');
-                    bot.socket.emit("random", Math.floor((Math.random() * 8)));
+                    var sound = message.split(' ')[1];
+                    bot.socket.emit("play-sound", sound);
                 }
             }
         } else if(response){
@@ -87,8 +78,8 @@ var bot = {
         }
     },
     checkForNewFollower: function(){
-        https.get('https://api.twitch.tv/kraken/channels/' + config.channel + '/follows', (res) => {
-            res.on('data', (data) => {
+        https.get('https://api.twitch.tv/kraken/channels/' + config.channel + '/follows', function(res){
+            res.on('data', function(data){
                 var total = parseInt(JSON.parse(data)['_total']);
                 if (total > bot.followerCount && bot.followerCount != -1){
                     var diff = total - bot.followerCount;
@@ -104,7 +95,7 @@ var bot = {
                 }
                 bot.followerCount = total;
             });
-        }).on('error', (e) => {
+        }).on('error', function(e){
             console.error(e);
         });
     },
