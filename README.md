@@ -1,3 +1,6 @@
+[![Dependency Status](https://img.shields.io/david/fewieden/CrossBot.svg)](https://david-dm.org/fewieden/CrossBot)
+[![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 # CrossBot
 IRC Bot for Twitch.tv
 

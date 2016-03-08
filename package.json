@@ -2,7 +2,7 @@
   "name": "CrossBot",
   "version": "0.0.1",
   "description": "IRC Bot for Twitch.tv",
-  "author": "crossfoxi",
+  "author": "fewieden",
   "scripts": {
     "start": "node server.js"
   },
